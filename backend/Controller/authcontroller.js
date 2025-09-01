@@ -1,95 +1,105 @@
-require("dotenv").config({path:require("path").resolve(__dirname,"../.env")});
-const user=require("../models/User");
-const jwt=require("jsonwebtoken");
-const bcrypt=require("bcrypt");
-const createtoken=require("../Utilities/secreattoken");
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
+const user = require("../models/User");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const createtoken = require("../Utilities/secreattoken");
 
-module.exports.signup=async(req,res,next)=>{
-    try{
+module.exports.signup = async (req, res, next) => {
+  try {
+    console.log("hello");
+    const { email, username, password } = req.body;
 
-    const email=req.body.email;
-    const username=req.body.username;
-    const password=req.body.password;
+    const isexist = await user.findOne({ email });
+    if (isexist) {
+      return res.status(400).json({ message: "User already exists. Please login." });
+    }
 
-    const isexist=await user.findOne({email:email});
-    if(isexist){
-        res.send("user already exists please login");
-    }
-    else {
-        const newuser=  new user({email:email , username:username,password:password});
-        await newuser.save();
-        console.log(newuser);
-        const token=createtoken(newuser._id);
-        console.log("the token is",token);
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: false,
-  sameSite: "Lax",
-  maxAge: 24 * 60 * 60 * 1000,
-});
-res.status(201).send("new user added");
-    }
-    }
-    catch(err){
+    // hash password before saving
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newuser = new user({ email, username, password: hashedPassword });
+    await newuser.save();
+
+    const token = createtoken(newuser._id);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.send({ message: "New user added", user: { id: newuser._id, email, username } });
+  } catch (err) {
     console.log(err);
-    res.send(err);
-    }
-}
-
-module.exports.login=async(req,res,next)=>{
-    try{
-    const {email,password}=req.body;
-    if(!email || !password){
-        return res.send("both the filed are required");
-    }
-    const isexisuser=await user.findOne({email:email});
-    if(!isexisuser){
-    return res.send("user not register");
-    }
-    const correctpassword=isexisuser.password;
-    const authuser=await bcrypt.compare(password, correctpassword)
-    if(!authuser){
-        return res.send("incorrect email or password")
-    }
-    const token=createtoken(isexisuser._id);
-res.cookie("token", token, {
-  httpOnly: true,
-  secure: false,
-  sameSite: "Lax",
-  maxAge: 24 * 60 * 60 * 1000,
-});
-    res.send("login successfull");
-    
-}
-    catch(err){
-        res.send(err);
-    }
-} 
-
-module.exports.logout=(req,res)=>{
-res.cookie("token", "", {
-  httpOnly: true,
-  secure: false,
-  sameSite: "Lax",
-  maxAge:0,
-});
-    res.send("logout done");
-
-}
-module.exports.userstatus = (req, res) => {
-    const token = req.cookies.token
-    if (!token) {
-      return res.send("token not found ")
-    }
-    jwt.verify(token, process.env.JWT_SECRET, async (err, data) => {
-      if (err) {
-        res.send("token not match")
-      } else {
-        const User = await user.findById(data.id)
-        if (User) {         
-        res.send(User);
-        } 
-        else  res.send("user not found")
-      }
-    })
+    res.status(500).json({ message: "Internal server error" });
   }
+};
+
+module.exports.login = async (req, res, next) => {
+  try {
+    console.log(req.body);
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ message: "Both fields are required" });
+    }
+
+    const isexisuser = await user.findOne({ email });
+    if (!isexisuser) {
+      return res.status(404).json({ message: "User not registered" });
+    }
+    console.log("isexisuser", isexisuser);
+    console.log("password", isexisuser.password); 
+    console.log("provided password", password);
+    console.log(typeof(password));
+    console.log("hashed password", typeof(isexisuser.password));
+    
+    const authuser = await bcrypt.compare(password, isexisuser.password);
+    console.log("authuser", authuser);
+    if (authuser) {
+      return res.status(401).json({ message: "Incorrect email or password" });
+    }
+  
+    const token = createtoken(isexisuser._id);
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+    });
+
+    res.json({ message: "Login successful", user: { id: isexisuser._id, email: isexisuser.email, username: isexisuser.username } });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+module.exports.logout = (req, res) => {
+  res.cookie("token", "", {
+    httpOnly: true,
+    secure: false,
+    sameSite: "Lax",
+    maxAge: 0,
+  });
+  res.json({ message: "Logout done" });
+};
+
+module.exports.userstatus = (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(401).json({ message: "Token not found" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, async (err, data) => {
+    if (err) {
+      return res.status(403).json({ message: "Invalid token" });
+    } else {
+      const User = await user.findById(data.id);
+      if (User) {
+        res.json(User);
+      } else {
+        res.status(404).json({ message: "User not found" });
+      }
+    }
+  });
+};
