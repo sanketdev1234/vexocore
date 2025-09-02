@@ -22,7 +22,7 @@ module.exports.signup = async (req, res, next) => {
     const token = createtoken(newuser._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: true, // Set to true for production
       sameSite: "none", // lax for development
       maxAge: 24 * 60 * 60 * 1000,
     });
