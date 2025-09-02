@@ -5,6 +5,8 @@ const login=require("../Controller/authcontroller").login;
 const userstatus=require("../Controller/authcontroller").userstatus;
 const logout=require("../Controller/authcontroller").logout;
 
+
+
 router.post("/signup",signup);
 router.post("/login",login);
 router.get("/authstatus",userstatus);

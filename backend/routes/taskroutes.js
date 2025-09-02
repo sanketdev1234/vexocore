@@ -11,7 +11,7 @@ const deleteTask = require("../Controller/taskcontroller").deleteTask;
 
 // Task routes (all protected with userverification middleware)
 router.get("/", userverification, getAllTasks);
-router.post("/", userverification, createTask);
+router.post("/newtask", userverification, createTask);
 router.get("/:id", userverification, getTask);
 router.put("/:id", userverification, updateTask);
 router.patch("/:id/status", userverification, toggleTaskStatus);

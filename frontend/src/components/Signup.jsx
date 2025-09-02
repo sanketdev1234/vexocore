@@ -74,7 +74,21 @@ const Signup = () => {
     setMessage('');
 
     try {
-      const response = await fetch('https://vexocore.onrender.com/api/auth/signup', {
+      // const response = await fetch('https://vexocore.onrender.com/api/auth/signup', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: formData.email,
+      //     username: formData.username,
+      //     password: formData.password
+      //   }) ,
+      //   credentials: 'include' // Include cookies
+      // });
+
+
+            const response = await fetch('http://localhost:8080/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -101,7 +115,7 @@ const Signup = () => {
         
         // Redirect to dashboard or home page after successful signup
         setTimeout(() => {
-          window.location.href = '/dashboard'; // or wherever you want to redirect
+          window.location.href = '/login'; // or wherever you want to redirect
         }, 2000);
       } else {
         setMessage(data.message || 'Signup failed. Please try again.');

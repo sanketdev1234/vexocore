@@ -11,6 +11,11 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
         credentials: 'include'
       });
       
+      //     const response = await fetch('https://vexocore.onrender.com/api/auth/logout', {
+      //   method: 'GET',
+      //   credentials: 'include'
+      // });
+
       if (response.ok) {
         onLogout();
         navigate('/login');

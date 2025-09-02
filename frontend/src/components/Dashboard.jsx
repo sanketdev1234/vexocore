@@ -25,9 +25,15 @@ const Dashboard = ({ user }) => {
       queryParams.append('sortBy', filters.sortBy);
       queryParams.append('sortOrder', filters.sortOrder);
 
-      const response = await fetch(`https://vexocore.onrender.com/api/tasks?${queryParams}`, {
+      // const response = await fetch(`https://vexocore.onrender.com/api/tasks?${queryParams}`, {
+      //   credentials: 'include'
+      // });
+
+     const response = await fetch(`http://localhost:8080/api/tasks?${queryParams}`, {
         credentials: 'include'
       });
+
+      console.log(response);
 
       if (response.ok) {
         const data = await response.json();
@@ -42,7 +48,18 @@ const Dashboard = ({ user }) => {
 
   const handleCreateTask = async (taskData) => {
     try {
-      const response = await fetch('https://vexocore.onrender.com/api/tasks', {
+      // const response = await fetch('https://vexocore.onrender.com/api/tasks/newtask', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   credentials: 'include',
+      //   body: JSON.stringify(taskData)
+      // });
+
+
+
+        const response = await fetch('http://localhost:8080/api/tasks/newtask', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -50,6 +67,7 @@ const Dashboard = ({ user }) => {
         credentials: 'include',
         body: JSON.stringify(taskData)
       });
+
 
       if (response.ok) {
         setShowForm(false);
@@ -62,7 +80,17 @@ const Dashboard = ({ user }) => {
 
   const handleUpdateTask = async (taskId, taskData) => {
     try {
-      const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}`, {
+      // const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}`, {
+      //   method: 'PUT',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   credentials: 'include',
+      //   body: JSON.stringify(taskData)
+      // });
+
+
+            const response = await fetch(`http://localhost:8080/api/tasks/${taskId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -82,10 +110,15 @@ const Dashboard = ({ user }) => {
   const handleDeleteTask = async (taskId) => {
     if (window.confirm('Are you sure you want to delete this task?')) {
       try {
-        const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}`, {
+        // const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}`, {
+        //   method: 'DELETE',
+        //   credentials: 'include'
+        // });
+
+            const response = await fetch(`http://localhost:8080/api/tasks/${taskId}`, {
           method: 'DELETE',
           credentials: 'include'
-        });
+        });   
 
         if (response.ok) {
           fetchTasks();
@@ -98,10 +131,17 @@ const Dashboard = ({ user }) => {
 
   const handleToggleStatus = async (taskId) => {
     try {
-      const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}/status`, {
+      // const response = await fetch(`https://vexocore.onrender.com/api/tasks/${taskId}/status`, {
+      //   method: 'PATCH',
+      //   credentials: 'include'
+      // });
+
+
+            const response = await fetch(`http://localhost:8080/api/tasks/${taskId}/status`, {
         method: 'PATCH',
         credentials: 'include'
       });
+      
 
       if (response.ok) {
         fetchTasks();

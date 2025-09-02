@@ -14,10 +14,8 @@ module.exports.signup = async (req, res, next) => {
       return res.status(400).json({ message: "User already exists. Please login." });
     }
 
-    // hash password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newuser = new user({ email, username, password: hashedPassword });
+    const newuser = new user({ email, username, password: password });
     await newuser.save();
 
     const token = createtoken(newuser._id);
@@ -56,7 +54,7 @@ module.exports.login = async (req, res, next) => {
     const authuser = await bcrypt.compare(password, isexisuser.password);
     console.log("authuser", authuser);
     if (!authuser) {
-      return res.status(200).json({ message: "Incorrect email or password" });
+      return res.status(404).json({ message: "Incorrect email or password" });
     }
   
     const token = createtoken(isexisuser._id);

@@ -17,7 +17,7 @@ function App() {
 useEffect(() => {
   const fetchUser = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/userstatus', {
+      const response = await fetch('http://localhost:8080/api/auth//authstatus', {
         credentials: 'include'
       });
       if (response.ok) {
