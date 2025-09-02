@@ -22,7 +22,7 @@ module.exports.signup = async (req, res, next) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "Lax",
+      sameSite: "none", // lax for development
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -61,7 +61,7 @@ module.exports.login = async (req, res, next) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      sameSite: "Lax",
+      sameSite: "none", // lax for development
       maxAge: 24 * 60 * 60 * 1000,
     });
 
@@ -76,7 +76,7 @@ module.exports.logout = (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
     secure: false,
-    sameSite: "Lax",
+    sameSite: "none", // lax for development
     maxAge: 0,
   });
   res.json({ message: "Logout done" });
