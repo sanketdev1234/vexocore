@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
 const Login = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -52,46 +52,31 @@ const Login = () => {
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
+    if (!validateForm()) return;
     setLoading(true);
     setMessage('');
-
     try {
-      const response = await fetch('http://localhost:8080/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        }),
-        credentials: 'include' // Include cookies
+      console.log("Attempting login with:", formData);
+      const response = await axios.post('http://localhost:8080/api/auth/login', {
+        email: formData.email,
+        password: formData.password
+      }, {
+        withCredentials: true
       });
 
-      const data = await response.json();
-      console.log(data);
-      if (response.ok) {
+      const data = response.data;
+      if (response.status === 200) {
         setMessage('Login successful! Redirecting...');
-        // Reset form
-        setFormData({
-          email: '',
-          password: ''
-        });
-        
-        // Redirect to dashboard or home page after successful login
+        setFormData({ email: '', password: '' });
+        // Update authentication state here if needed
         setTimeout(() => {
-          window.location.href = '/dashboard'; // or wherever you want to redirect
+          window.location.href = '/dashboard';
         }, 1500);
       } else {
         setMessage(data.message || 'Login failed. Please try again.');
       }
     } catch (error) {
-      console.error('Login error:', error);
-      setMessage('Network error. Please check your connection and try again.');
+      setMessage(error.response?.data?.message || 'Network error. Please check your connection and try again.');
     } finally {
       setLoading(false);
     }

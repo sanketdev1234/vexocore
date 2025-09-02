@@ -43,7 +43,7 @@ module.exports.login = async (req, res, next) => {
       return res.status(400).json({ message: "Both fields are required" });
     }
 
-    const isexisuser = await user.findOne({ email });
+    const isexisuser = await user.findOne({ email:email });
     if (!isexisuser) {
       return res.status(404).json({ message: "User not registered" });
     }
@@ -55,8 +55,8 @@ module.exports.login = async (req, res, next) => {
     
     const authuser = await bcrypt.compare(password, isexisuser.password);
     console.log("authuser", authuser);
-    if (authuser) {
-      return res.status(401).json({ message: "Incorrect email or password" });
+    if (!authuser) {
+      return res.status(200).json({ message: "Incorrect email or password" });
     }
   
     const token = createtoken(isexisuser._id);

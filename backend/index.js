@@ -12,9 +12,14 @@ const pathToRegexp = require("path-to-regexp");
 const ExpressError=require("./Utilities/ExpressError");
 const authRoutes=require("./routes/authroutes");
 const taskRoutes=require("./routes/taskroutes");
+const bodyParser = require('body-parser');
 
 const port=process.env.PORT || 8080;
 const dburl=process.env.ATLAS_URL;
+
+
+app.use(bodyParser.json()); // To parse JSON data
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors({
     origin: "http://localhost:5173",
