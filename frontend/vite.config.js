@@ -9,15 +9,14 @@ export default defineConfig({
     host: true,
     cors: {
       origin: [
-        // 'https://s-exchange-backend.onrender.com',
+        'https://vexocore.onrender.com',
         'http://localhost:8080'
       ],
       credentials: true
     },
-    // allowedHosts: [
-    //   's-exchange-backend.onrender.com',
-    //   '.onrender.com',
-      
-    // ]
+    allowedHosts: [
+      'frontend-qghg.onrender.com',
+      '.onrender.com',
+    ]
   }
 })

@@ -22,7 +22,8 @@ app.use(bodyParser.json()); // To parse JSON data
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173",
+    "https://vexocore.onrender.com" , "https://frontend-qghg.onrender.com"],
     methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
     credentials: true,
 }));
