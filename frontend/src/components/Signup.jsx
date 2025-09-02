@@ -74,21 +74,7 @@ const Signup = () => {
     setMessage('');
 
     try {
-      // const response = await fetch('https://vexocore.onrender.com/api/auth/signup', {
-      //   method: 'POST',
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: JSON.stringify({
-      //     email: formData.email,
-      //     username: formData.username,
-      //     password: formData.password
-      //   }) ,
-      //   credentials: 'include' // Include cookies
-      // });
-
-
-            const response = await fetch('http://localhost:8080/api/auth/signup', {
+      const response = await fetch('https://vexocore.onrender.com/api/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -100,6 +86,20 @@ const Signup = () => {
         }) ,
         credentials: 'include' // Include cookies
       });
+
+
+      //       const response = await fetch('http://localhost:8080/api/auth/signup', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: JSON.stringify({
+      //     email: formData.email,
+      //     username: formData.username,
+      //     password: formData.password
+      //   }) ,
+      //   credentials: 'include' // Include cookies
+      // });
 
       const data = await response.json();
 

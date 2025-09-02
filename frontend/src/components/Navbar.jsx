@@ -10,9 +10,14 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch('http://localhost:8080/api/auth/authstatus', {
+        // const response = await fetch('http://localhost:8080/api/auth/authstatus', {
+        //   credentials: 'include'
+        // });
+
+        const response = await fetch('https://vexocore.onrender.com/api/auth/authstatus', {
           credentials: 'include'
         });
+
         if (response.ok) {
           const data = await response.json();
           setUser(data);

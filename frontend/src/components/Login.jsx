@@ -56,22 +56,22 @@ const Login = () => {
     setLoading(true);
     setMessage('');
     try {
-      // console.log("Attempting login with:", formData);
-      // const response = await axios.post('https://vexocore.onrender.com/api/auth/login', {
-      //   email: formData.email,
-      //   password: formData.password
-      // }, {
-      //   withCredentials: true
-      // });
-
-            console.log("Attempting login with:", formData);
-            console.log("FormData type:", typeof(formData));
-      const response = await axios.post('http://localhost:8080/api/auth/login', {
+      console.log("Attempting login with:", formData);
+      const response = await axios.post('https://vexocore.onrender.com/api/auth/login', {
         email: formData.email,
         password: formData.password
       }, {
         withCredentials: true
       });
+
+            console.log("Attempting login with:", formData);
+            console.log("FormData type:", typeof(formData));
+      // const response = await axios.post('http://localhost:8080/api/auth/login', {
+      //   email: formData.email,
+      //   password: formData.password
+      // }, {
+      //   withCredentials: true
+      // });
 
       const data = response.data;
       if (response.status === 200) {
