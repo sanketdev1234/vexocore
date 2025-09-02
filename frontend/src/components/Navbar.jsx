@@ -1,8 +1,33 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useState,useEffect } from 'react'; 
 
-const Navbar = ({ isAuthenticated, user, onLogout }) => {
+const Navbar = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState({});
+  const [isAuthenticated,setisAuthenticated]=useState(false);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/api/auth/authstatus', {
+          credentials: 'include'
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setUser(data);
+          setisAuthenticated(true);
+        } else {
+          setUser(null);
+          setisAuthenticated(false);
+        }
+      } catch (error) {
+        setUser(null);
+        setisAuthenticated(false);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -18,6 +43,8 @@ const Navbar = ({ isAuthenticated, user, onLogout }) => {
 
       if (response.ok) {
         onLogout();
+        setUser(null);
+        setisAuthenticated(false);
         navigate('/login');
       }
     } catch (error) {

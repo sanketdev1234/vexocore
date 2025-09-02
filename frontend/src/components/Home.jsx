@@ -3,48 +3,13 @@ import { Routes, Route, Link } from 'react-router-dom';
 import Login from './Login';
 import Signup from './Signup';
 import Dashboard from './Dashboard';
-
+import Navbar from './Navbar';
 const Home = () => {
   return (
     <div className="min-vh-100 bg-light">
+
       {/* Navbar */}
-      <nav className="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
-        <div className="container">
-          <Link className="navbar-brand fw-bold" to="/">
-            <i className="fas fa-tasks me-2"></i>
-            Task Manager
-          </Link>
-          
-          <button 
-            className="navbar-toggler" 
-            type="button" 
-            data-bs-toggle="collapse" 
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          
-          <div className="collapse navbar-collapse" id="navbarNav">
-            <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <Link className="nav-link" to="/login">
-                  <i className="fas fa-sign-in-alt me-1"></i>
-                  Login
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/signup">
-                  <i className="fas fa-user-plus me-1"></i>
-                  Sign Up
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Routes */}
       <Routes>
