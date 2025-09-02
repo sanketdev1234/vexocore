@@ -36,15 +36,15 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/auth/logout', {
-        method: 'GET',
-        credentials: 'include'
-      });
-      
-      //     const response = await fetch('https://vexocore.onrender.com/api/auth/logout', {
+      // const response = await fetch('http://localhost:8080/api/auth/logout', {
       //   method: 'GET',
       //   credentials: 'include'
       // });
+      
+          const response = await fetch('https://vexocore.onrender.com/api/auth/logout', {
+        method: 'GET',
+        credentials: 'include'
+      });
 
       if (response.ok) {
         onLogout();
