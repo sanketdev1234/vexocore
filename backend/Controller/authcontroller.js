@@ -56,7 +56,7 @@ module.exports.login = async (req, res, next) => {
     const authuser = await bcrypt.compare(password, isexisuser.password);
     console.log("authuser", authuser);
     if (!authuser) {
-      return res.status(200).json({ message: "Incorrect email or password" });
+      return res.status(400).json({ message: "Incorrect email or password" });
     }
   
     const token = createtoken(isexisuser._id);
