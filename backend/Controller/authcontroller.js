@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const createtoken = require("../Utilities/secreattoken");
 
+
 module.exports.signup = async (req, res, next) => {
   try {
     console.log("hello");
@@ -21,7 +22,7 @@ module.exports.signup = async (req, res, next) => {
     const token = createtoken(newuser._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "none", // lax for development
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -60,7 +61,7 @@ module.exports.login = async (req, res, next) => {
     const token = createtoken(isexisuser._id);
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "none", // lax for development
       maxAge: 24 * 60 * 60 * 1000,
     });
@@ -75,7 +76,7 @@ module.exports.login = async (req, res, next) => {
 module.exports.logout = (req, res) => {
   res.cookie("token", "", {
     httpOnly: true,
-    secure: false,
+    secure: true,
     sameSite: "none", // lax for development
     maxAge: 0,
   });
