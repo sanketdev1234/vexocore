@@ -16,6 +16,7 @@ const ejsMate=require("ejs-mate");
 const flash=require("connect-flash");
 const methodOverride=require("method-override");
 const session=require("express-session");
+const cors=require("cors");
 
 
 
@@ -48,6 +49,13 @@ cookie:{
     maxAge:24*3600*7*1000
 }
 }
+
+app.use(cors({
+    origin:"http://localhost:5174",
+    methods:["GET","PUT","POST","DELETE","PATCH"],
+    credentials:true
+}));
+
 app.use(session(sessionoption));
 
 app.engine("ejs",ejsMate);
@@ -83,7 +91,9 @@ app.get("/formlogin",async(req,res)=>{
 app.get("/seeallusers",async(req,res,next)=>{
     try{
     const all_users=await user.find({});
-    res.render("users/display.ejs",{all_users});
+    // res.render("users/display.ejs",{all_users});
+    console.log(all_users);
+    res.send(all_users);
     }
     catch(error){
         console.log(error);
@@ -99,8 +109,8 @@ app.post("/signup",async(req,res,next)=>{
     const isexist=await user.find({username:username});
     if(isexist.length>0){
         req.flash("error","User already exists please login");
-        // return res.send("User already exists please login");
-        res.render("users/userstatus.ejs");
+        return res.send("User already exists please login");
+        // res.render("users/userstatus.ejs");
     }
     const newuser=await user.insertOne({username:username,email:email,password:password});
     console.log(newuser);
@@ -113,8 +123,8 @@ app.post("/signup",async(req,res,next)=>{
         maxAge:24*60*60*1000
     });
     req.flash("success","User created successfully");
-    // res.status(201).send("User created successfully" , newuser);
-    res.render("users/userstatus.ejs",{newuser});
+    res.status(201).send("User created successfully" , newuser);
+    // res.render("users/userstatus.ejs",{newuser});
    
 }
     catch(err){
@@ -130,14 +140,14 @@ app.post("/login",async(req,res,next)=>{
         const existing_user=await user.findOne({username:username}); 
         if(!existing_user){
             req.flash("error","User does not exist please signup");
-            // return  res.status(400).send("User does not exist please signup");
-            res.render("/users/userstatus.ejs");
+            return  res.status(400).send("User does not exist please signup");
+            // res.render("/users/userstatus.ejs");
         }
         const ismatch=await bcrypt.compare(password,existing_user.password);
         if(!ismatch){
             req.flash("error","Invalid credentials");
-            // return res.status(400).send("Invalid credentials");
-            res.render("users/userstatus.ejs");
+            return res.status(400).send("Invalid credentials");
+            // res.render("users/userstatus.ejs");
         }
         const token=jwt.sign({id:existing_user._id},process.env.SECRET_KEY);
         res.cookie("token",token,{
@@ -147,9 +157,9 @@ app.post("/login",async(req,res,next)=>{
             maxAge:24*60*60*1000
         });
         req.flash("success","User loggedin successfully");
-        // res.status(200).send("Login successful");
+        res.status(200).send("Login successful");
         const newuser=existing_user;
-        res.render("users/userstatus.ejs",{newuser});//  donot write /users...
+        // res.render("users/userstatus.ejs",{newuser});//  donot write /users...
 
     }
 
@@ -164,8 +174,8 @@ app.post("/login",async(req,res,next)=>{
 app.get("/logout",async(req,res)=>{
 res.cookie("token","");
 req.flash("error","logout done!")
-// res.send("logout done");
-res.render("users/userstatus.ejs");
+res.send("logout done");
+// res.render("users/userstatus.ejs");
 });
 
 
