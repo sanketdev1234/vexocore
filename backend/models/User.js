@@ -1,46 +1,43 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const passwordValidator=require("../Utilities/passwordconstrain");
-const saltround=10;
+const mongoose=require("mongoose");
+const bcrypt=require("bcrypt");
+const Schema= mongoose.Schema;
+const saltRounds=10;
+const userSchema= new Schema({
 
-const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true, 
-    }
-}, {
-    timestamps: true
+username:{
+    type:String,
+    required:true,
+    unique:true
+},
+
+email:{
+    type:String,
+    required:true,
+},
+password:{
+    type:String,
+    required:true,
+},
+
 });
 
-
-userSchema.pre("save",  function (next) {
-    const User = this;
-    //validat the password
-    passwordValidator(User.password,function(err){
-        if(err) return next(err);
-    // Step 2: Generate salt
-    bcrypt.genSalt(10, function (err, salt) {
-      // Step 3: Hash the password using the salt
-    bcrypt.hash(User.password, salt, function (err, hash) {
-        // Step 4: Replace plain password with hashed password
-        User.password = hash;
-        // Step 5: Continue with saving the user
-        next();
-        });
-    });
+userSchema.pre("save",function(next){
+    const User=this;
+    bcrypt.genSalt(saltRounds,function(err,salt){
+        if(err){
+            return next(err);
+        }
+        bcrypt.hash(User.password,salt,function(err,hash){
+            if(err){
+                return next(err);
+            }
+            User.password=hash;
+            next();
+        })
     })
-    });
-
+})
 
 const user=mongoose.model("user",userSchema);
+
+
 module.exports=user;

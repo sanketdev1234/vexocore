@@ -1,0 +1,36 @@
+ <% layout("./layout/boilerplate.ejs") %>    <!--// it if use ../ it will directly goes to backend folder -->
+<div class="container">
+    <% if(error.length > 0) { %>
+        <p>
+            <%=error%>
+        </p>
+     <% } %>
+    <% if(message.length > 0) { %>
+        <p>
+            <%=message%>
+        </p>
+     <% } %>
+    
+     <form method="post" action="/signup" class="needs-validation" novalidate>
+     
+        <label for="username"  class="form-label" >
+         username:
+        </label>
+       <input type="input" class="from-control" required placeholder="enter the username" name="username" id="username">
+
+        <label class="from-label" for="email">email:</label>
+       <input type="input" class="form-control" required placeholder="enter the email" name="email" id="email">
+
+       <label class="from-label" for="password">Password:</label>
+       <input type="password" class="form-control" required placeholder="enter the password" name="password" id="password">
+
+       <button class="btn">
+        submit
+       </button>
+     </form>
+
+    <form method="get" action="/formlogin">
+        <button class="btn " style="background-color: rgb(233, 36, 25); color: white;">signup!</button>
+        </form>
+
+</div>

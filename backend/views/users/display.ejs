@@ -1,0 +1,21 @@
+<% layout("./layout/boilerplate.ejs") %>
+<div class="container">
+    <% if(error.length > 0) { %>
+        <p>
+            <%=error%>
+        </p>
+     <% } %>
+    <% if(message.length > 0) { %>
+        <p>
+            <%=message%>
+        </p>
+     <% } %>
+    <%if(all_users.length > 0){ %>
+     <ul>
+        <% for(let this_user of all_users){%>
+        <li><%=this_user%></li>
+        <%}%>
+        
+     </ul>
+    <%}%>
+</div>
